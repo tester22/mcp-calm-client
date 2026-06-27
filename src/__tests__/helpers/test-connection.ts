@@ -13,7 +13,10 @@ import { type ICalmTestEnv, readCalmTestEnv } from './test-env';
 // Local service route map (mirrors the deleted serviceRoutes.ts)
 // ---------------------------------------------------------------------------
 
-const TEST_SERVICE_ROUTES: Record<CalmService, string> = {
+// Keyed by string (not `CalmService`) so the routes can include
+// `crossLibraryDevelopments`, which the published `@mcp-abap-adt/interfaces`
+// `CALM_SERVICES` union does not yet contain.
+const TEST_SERVICE_ROUTES: Record<string, string> = {
   features: '/calm-features/v1',
   documents: '/calm-documents/v1',
   tasks: '/calm-tasks/v1',
@@ -23,6 +26,7 @@ const TEST_SERVICE_ROUTES: Record<CalmService, string> = {
   analytics: '/calm-analytics/v1/odata/v4/analytics',
   processMonitoring: '/calm-processmonitoring/v1',
   logs: '/calm-logs/v1',
+  crossLibraryDevelopments: '/calm-crosslibrarydevelopments/v1',
 };
 
 // ---------------------------------------------------------------------------

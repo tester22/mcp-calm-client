@@ -1,5 +1,46 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Cross-Library Developments client (`CalmDevelopment`).** New
+  `calm.getDevelopments()` handler for the SAP Cloud ALM Cross-Library
+  Developments OData API (`/calm-crosslibrarydevelopments/v1`). Covers:
+  - Developments CRUD — `list`, `get`, `getByDisplayId`, `getWithExpand`,
+    `create`, `update` (PATCH → `204`, returns `void`), `delete`. The
+    collection is tenant-wide, so `list()` takes no `projectId`.
+  - **Library assignments ("library items")** — the headline addition.
+    Tenant-wide `listLibraryAssignments` / `getLibraryAssignment` /
+    `createLibraryAssignment` / `deleteLibraryAssignment`, plus
+    development-scoped `listDevelopmentLibraryAssignments` /
+    `createDevelopmentLibraryAssignment`
+    (`/Developments/{uuid}/toLibraryAssignments`). Assignments may also be
+    created inline via `create()`'s `toLibraryAssignments`.
+  - Tag assignments — `listTagAssignments` and
+    `listDevelopmentTagAssignments`.
+  - External references — `getDevelopmentByExternalReference`
+    (`/ExternalReferences/{uuid}/toDevelopment`); references may be created
+    inline via `create()`'s `toExternalReferences`.
+  - Lookups — `listSources` / `listTypes` and per-development `getSource` /
+    `getType`.
+
+  New exported types: `IDevelopment`, `ICreateDevelopmentParams`,
+  `IUpdateDevelopmentParams`, `ILibraryAssignment`,
+  `ICreateLibraryAssignmentParams`, `IDevelopmentSource`, `IDevelopmentType`,
+  `ITagAssignment`, `IDevelopmentExternalReference`,
+  `ICreateDevelopmentExternalReferenceParams`, `DevelopmentTypeCode`,
+  `DevelopmentSourceCode`, plus the `CROSS_LIBRARY_DEVELOPMENTS_SERVICE` /
+  `CROSS_LIBRARY_DEVELOPMENTS_ROUTE` constants.
+
+  **Connection note:** the handler routes through a `crossLibraryDevelopments`
+  service id not yet present in the `@mcp-abap-adt/interfaces` `CALM_SERVICES`
+  union (latest published: 8.0.0). The id is cast in
+  `core/development/service.ts`; an `ICalmConnection` must map it to
+  `/calm-crosslibrarydevelopments/v1` (the bundled test connection does). When
+  `interfaces` adds the member the cast can be dropped with no public API
+  change.
+
 ## 0.5.0 — 2026-06-03
 
 ### Added

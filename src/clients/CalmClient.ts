@@ -1,5 +1,6 @@
 import type { ICalmConnection } from '@mcp-abap-adt/interfaces';
 import { CalmAnalytics } from '../core/analytics/CalmAnalytics';
+import { CalmDevelopment } from '../core/development/CalmDevelopment';
 import { CalmDocument } from '../core/document/CalmDocument';
 import { CalmFeature } from '../core/feature/CalmFeature';
 import { CalmHierarchy } from '../core/hierarchy/CalmHierarchy';
@@ -62,5 +63,9 @@ export class CalmClient {
 
   getLogs(): CalmLog {
     return new CalmLog(this.connection);
+  }
+
+  getDevelopments(): CalmDevelopment {
+    return new CalmDevelopment(this.connection);
   }
 }

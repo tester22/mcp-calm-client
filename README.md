@@ -118,10 +118,20 @@ API prefix (no `/api`), and performs no token refresh — the API key is static.
 | `getTasks()` | `CalmTask` | `/calm-tasks/v1` | CRUD, comments, references, workstreams, deliverables |
 | `getProjects()` | `CalmProject` | `/calm-projects/v1` | list/get/create, timeboxes, team members, programs |
 | `getLogs()` | `CalmLog` | `/calm-logs/v1` | Domain-specific REST (not OData): `get` / `post` |
+| `getDevelopments()` | `CalmDevelopment` | `/calm-crosslibrarydevelopments/v1` | CRUD, `getByDisplayId`, `$expand`, library assignments (library items), tag assignments, external references, sources/types |
 
 All OData services accept an optional `ODataQuery` for filtering, sorting,
 pagination, `$expand`, and `$count`. Logs uses a named-params query language
 (provider, from/to, `logsFilters[serviceId]`, pagination).
+
+> **Note — Cross-Library Developments service id.** `getDevelopments()` routes
+> through a `crossLibraryDevelopments` service id that the published
+> `@mcp-abap-adt/interfaces` `CALM_SERVICES` union does not yet contain. The
+> client exports the id as `CROSS_LIBRARY_DEVELOPMENTS_SERVICE` and the route as
+> `CROSS_LIBRARY_DEVELOPMENTS_ROUTE` (`/calm-crosslibrarydevelopments/v1`). Your
+> `ICalmConnection` implementation must map that id to the route; the bundled
+> test connection already does. Once `interfaces` adds the member, the internal
+> cast in `core/development/service.ts` can be removed with no API change.
 
 ## OData query builder
 

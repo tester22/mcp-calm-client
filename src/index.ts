@@ -21,6 +21,25 @@ export {
   CalmAnalytics,
 } from './core/analytics';
 export type {
+  DevelopmentSourceCode,
+  DevelopmentTypeCode,
+  ICreateDevelopmentExternalReferenceParams,
+  ICreateDevelopmentParams,
+  ICreateLibraryAssignmentParams,
+  IDevelopment,
+  IDevelopmentExternalReference,
+  IDevelopmentSource,
+  IDevelopmentType,
+  ILibraryAssignment,
+  ITagAssignment,
+  IUpdateDevelopmentParams,
+} from './core/development';
+export {
+  CalmDevelopment,
+  CROSS_LIBRARY_DEVELOPMENTS_ROUTE,
+  CROSS_LIBRARY_DEVELOPMENTS_SERVICE,
+} from './core/development';
+export type {
   ICreateDocumentParams,
   IDocument,
   IDocumentStatus,
