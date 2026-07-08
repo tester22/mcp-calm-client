@@ -64,6 +64,30 @@ describe('CalmProject', () => {
     expect(headers?.['Content-Type']).toBe('application/json');
   });
 
+  test('update PATCH /projects/{id} with JSON body', async () => {
+    let body: unknown;
+    let headers: Record<string, string> | undefined;
+    const { connection, calls } = mockConnection((req) => {
+      body = req.data;
+      headers = req.headers;
+      return { id: 'P1' };
+    });
+    const p = new CalmProject(connection);
+    await p.update('P1', { name: 'Renamed', status: 'ACTIVE' });
+    expect(calls[0].method).toBe('PATCH');
+    expect(calls[0].url).toBe('/projects/P1');
+    expect(body).toEqual({ name: 'Renamed', status: 'ACTIVE' });
+    expect(headers?.['Content-Type']).toBe('application/json');
+  });
+
+  test('delete DELETE /projects/{id}', async () => {
+    const { connection, calls } = mockConnection(() => undefined);
+    const p = new CalmProject(connection);
+    await p.delete('P1');
+    expect(calls[0].method).toBe('DELETE');
+    expect(calls[0].url).toBe('/projects/P1');
+  });
+
   test('nested timeboxes + team members', async () => {
     const { connection, calls } = mockConnection(() => ({ value: [] }));
     const p = new CalmProject(connection);

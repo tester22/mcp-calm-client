@@ -78,6 +78,7 @@ export type {
   IProject,
   ITeamMember,
   ITimebox,
+  IUpdateProjectParams,
 } from './core/project';
 export { CalmProject } from './core/project';
 export type {
@@ -92,12 +93,21 @@ export type {
 } from './core/task';
 export { CalmTask } from './core/task';
 export type {
+  ICreateActivityActionParams,
   ICreateTestActionParams,
   ICreateTestActivityParams,
+  ICreateTestApplicationParams,
+  ICreateTestCaseActivityParams,
   ICreateTestCaseParams,
+  ICreateTestReferenceParams,
   ITestAction,
   ITestActivity,
+  ITestApplication,
   ITestCase,
+  ITestReference,
+  ITestTagAssignment,
+  IUpdateTestActionParams,
+  IUpdateTestActivityParams,
   IUpdateTestCaseParams,
 } from './core/testCase';
 export { CalmTestCase } from './core/testCase';

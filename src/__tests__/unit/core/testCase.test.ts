@@ -126,4 +126,141 @@ describe('CalmTestCase', () => {
       expectedResult: 'ok',
     });
   });
+
+  test('create forwards extended test-case fields', async () => {
+    let body: unknown;
+    const { connection } = mockConnection((req) => {
+      body = req.data;
+      return { uuid: 'u' };
+    });
+    const c = new CalmTestCase(connection);
+    await c.create({
+      title: 'T',
+      projectId: 'P',
+      scopeId: 'S',
+      isPrepared: true,
+      solutionProcessId: 'sp',
+      contentPackageId: 'cp',
+    });
+    expect(body).toEqual({
+      title: 'T',
+      projectId: 'P',
+      scopeId: 'S',
+      isPrepared: true,
+      solutionProcessId: 'sp',
+      contentPackageId: 'cp',
+    });
+  });
+
+  test('forceDelete posts to the ExternalServiceAPI action path', async () => {
+    const { connection, calls } = mockConnection(() => undefined);
+    const c = new CalmTestCase(connection);
+    await c.forceDelete('u');
+    expect(calls[0].method).toBe('POST');
+    expect(calls[0].url).toBe(
+      '/ManualTestCases/u/api.v1.ExternalServiceAPI.forceDeletionIncludingTestRunsAndResults',
+    );
+  });
+
+  test('activity get / update / delete route to /Activities/{uuid}', async () => {
+    const { connection, calls } = mockConnection((req) =>
+      req.method === 'DELETE' ? undefined : { uuid: 'a' },
+    );
+    const c = new CalmTestCase(connection);
+    await c.getActivity('a');
+    await c.updateActivity('a', { title: 'A2', isInScope: false });
+    await c.deleteActivity('a');
+    expect(calls[0]).toMatchObject({ url: '/Activities/a', method: 'GET' });
+    expect(calls[1]).toMatchObject({ url: '/Activities/a', method: 'PATCH' });
+    expect(calls[1].data).toEqual({ title: 'A2', isInScope: false });
+    expect(calls[2]).toMatchObject({ url: '/Activities/a', method: 'DELETE' });
+  });
+
+  test('test-case-scoped activities list / create use toActivities nav', async () => {
+    const { connection, calls } = mockConnection((req) =>
+      req.method === 'POST' ? { uuid: 'a' } : { value: [] },
+    );
+    const c = new CalmTestCase(connection);
+    await c.listTestCaseActivities('tc-1', ODataQuery.new().top(3));
+    await c.createTestCaseActivity('tc-1', { title: 'A' });
+    expect(calls[0]).toMatchObject({
+      url: '/ManualTestCases/tc-1/toActivities?$top=3',
+      method: 'GET',
+    });
+    expect(calls[1]).toMatchObject({
+      url: '/ManualTestCases/tc-1/toActivities',
+      method: 'POST',
+    });
+  });
+
+  test('action get / update / delete route to /Actions/{uuid}', async () => {
+    const { connection, calls } = mockConnection((req) =>
+      req.method === 'DELETE' ? undefined : { uuid: 'act' },
+    );
+    const c = new CalmTestCase(connection);
+    await c.getAction('act');
+    await c.updateAction('act', { expectedResult: 'done' });
+    await c.deleteAction('act');
+    expect(calls[0]).toMatchObject({ url: '/Actions/act', method: 'GET' });
+    expect(calls[1]).toMatchObject({ url: '/Actions/act', method: 'PATCH' });
+    expect(calls[2]).toMatchObject({ url: '/Actions/act', method: 'DELETE' });
+  });
+
+  test('activity-scoped action create uses toActions nav', async () => {
+    const { connection, calls } = mockConnection(() => ({ uuid: 'act' }));
+    const c = new CalmTestCase(connection);
+    await c.createActivityAction('act-parent', { title: 'step' });
+    expect(calls[0]).toMatchObject({
+      url: '/Activities/act-parent/toActions',
+      method: 'POST',
+    });
+    expect(calls[0].data).toEqual({ title: 'step' });
+  });
+
+  test('references list / create use toReferences nav', async () => {
+    const { connection, calls } = mockConnection((req) =>
+      req.method === 'POST' ? { uuid: 'r' } : { value: [] },
+    );
+    const c = new CalmTestCase(connection);
+    await c.listTestCaseReferences('tc-1');
+    await c.createTestCaseReference('tc-1', { name: 'doc', url: 'http://x' });
+    expect(calls[0]).toMatchObject({
+      url: '/ManualTestCases/tc-1/toReferences',
+      method: 'GET',
+    });
+    expect(calls[1]).toMatchObject({
+      url: '/ManualTestCases/tc-1/toReferences',
+      method: 'POST',
+    });
+    expect(calls[1].data).toEqual({ name: 'doc', url: 'http://x' });
+  });
+
+  test('applications list / create use toApplications nav', async () => {
+    const { connection, calls } = mockConnection((req) =>
+      req.method === 'POST' ? { uuid: 'app' } : { value: [] },
+    );
+    const c = new CalmTestCase(connection);
+    await c.listActivityApplications('act-1');
+    await c.createActivityApplication('act-1', {
+      title: 'app',
+      url: 'http://a',
+    });
+    expect(calls[0]).toMatchObject({
+      url: '/Activities/act-1/toApplications',
+      method: 'GET',
+    });
+    expect(calls[1]).toMatchObject({
+      url: '/Activities/act-1/toApplications',
+      method: 'POST',
+    });
+  });
+
+  test('tag assignments: tenant-wide and per-test-case', async () => {
+    const { connection, calls } = mockConnection(() => ({ value: [] }));
+    const c = new CalmTestCase(connection);
+    await c.listTagAssignments();
+    await c.listTestCaseTagAssignments('tc-1');
+    expect(calls[0].url).toBe('/TagAssignments');
+    expect(calls[1].url).toBe('/ManualTestCases/tc-1/toTagAssignments');
+  });
 });

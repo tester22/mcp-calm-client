@@ -4,6 +4,37 @@
 
 ### Added
 
+- **Test Management — full write coverage (`CalmTestCase`).** Expanded to match
+  the SAP `calm-tm-manual-test-cases-api-v1` example. New operations:
+  - Activities — `getActivity`, `updateActivity` (PATCH), `deleteActivity`,
+    plus test-case-scoped `listTestCaseActivities` /
+    `createTestCaseActivity` (`/ManualTestCases/{uuid}/toActivities`).
+  - Actions — `getAction`, `updateAction` (PATCH), `deleteAction`, plus
+    activity-scoped `createActivityAction` (`/Activities/{uuid}/toActions`).
+  - References — `listTestCaseReferences` / `createTestCaseReference`
+    (`/ManualTestCases/{uuid}/toReferences`).
+  - Applications — `listActivityApplications` / `createActivityApplication`
+    (`/Activities/{uuid}/toApplications`).
+  - Tag assignments — `listTagAssignments` (`/TagAssignments`) and
+    `listTestCaseTagAssignments` (`/ManualTestCases/{uuid}/toTagAssignments`).
+  - `forceDelete` — `POST /ManualTestCases/{uuid}/api.v1.ExternalServiceAPI.forceDeletionIncludingTestRunsAndResults`,
+    deleting a test case together with its test runs and results.
+
+  Test-case create/update params gained `scopeId`, `isPrepared`,
+  `solutionProcessId`, `solutionProcessFlowId`, `solutionProcessFlowDiagramId`
+  and `contentPackageId`; activity params gained `isInScope`. New exported
+  types: `ITestReference`, `ICreateTestReferenceParams`, `ITestApplication`,
+  `ICreateTestApplicationParams`, `ITestTagAssignment`,
+  `ICreateTestCaseActivityParams`, `IUpdateTestActivityParams`,
+  `ICreateActivityActionParams`, `IUpdateTestActionParams`. Existing
+  `list*`/`create*` signatures are unchanged (backward compatible).
+
+- **Projects — `update` and `delete` (`CalmProject`).** `update(id, params)`
+  (`PATCH /projects/{id}`) and `delete(id)` (`DELETE /projects/{id}`), plus a
+  new `IUpdateProjectParams` type. These rely on the projects fetch/update
+  capability SAP added in 2025; older tenants that expose only read/create on
+  projects may reject them with HTTP 405.
+
 - **Cross-Library Developments client (`CalmDevelopment`).** New
   `calm.getDevelopments()` handler for the SAP Cloud ALM Cross-Library
   Developments OData API (`/calm-crosslibrarydevelopments/v1`). Covers:

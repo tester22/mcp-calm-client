@@ -111,12 +111,12 @@ API prefix (no `/api`), and performs no token refresh — the API key is static.
 |---|---|---|---|
 | `getFeatures()` | `CalmFeature` | `/calm-features/v1` | CRUD, `getByDisplayId`, `$expand`, external references, priorities/statuses |
 | `getDocuments()` | `CalmDocument` | `/calm-documents/v1` | CRUD, types/statuses |
-| `getTestCases()` | `CalmTestCase` | `/calm-testmanagement/v1` | CRUD, activities + actions (wire field `parent_ID`) |
+| `getTestCases()` | `CalmTestCase` | `/calm-testmanagement/v1` | CRUD + force-delete, activities/actions CRUD (top-level + `to*` nav), references, applications, tag assignments |
 | `getHierarchy()` | `CalmHierarchy` | `/calm-processhierarchy/v1` | CRUD, `$expand` |
 | `getAnalytics()` | `CalmAnalytics` | `/calm-analytics/v1/odata/v4/analytics` | Read-only, 17 named endpoints + `queryDataset` |
 | `getProcessMonitoring()` | `CalmProcessMonitoring` | `/calm-processmonitoring/v1` | Read-only, 5 list + 2 getById |
 | `getTasks()` | `CalmTask` | `/calm-tasks/v1` | CRUD, comments, references, workstreams, deliverables |
-| `getProjects()` | `CalmProject` | `/calm-projects/v1` | list/get/create, timeboxes, team members, programs |
+| `getProjects()` | `CalmProject` | `/calm-projects/v1` | list/get/create/update/delete, timeboxes, team members, programs |
 | `getLogs()` | `CalmLog` | `/calm-logs/v1` | Domain-specific REST (not OData): `get` / `post` |
 | `getDevelopments()` | `CalmDevelopment` | `/calm-crosslibrarydevelopments/v1` | CRUD, `getByDisplayId`, `$expand`, library assignments (library items), tag assignments, external references, sources/types |
 

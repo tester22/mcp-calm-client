@@ -39,3 +39,15 @@ export interface ICreateProjectParams {
   description?: string;
   programId?: string;
 }
+
+/**
+ * Payload for updating a project. All fields are optional; only provided
+ * fields are sent.
+ */
+export interface IUpdateProjectParams {
+  name?: string;
+  description?: string;
+  status?: string;
+  type?: string;
+  programId?: string;
+}
